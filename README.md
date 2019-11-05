@@ -1,4 +1,4 @@
-https://travis-ci.com/OluwmayowaF/Teamwork-Demo.svg?branch=develop
+[![Build Status](https://travis-ci.com/OluwmayowaF/Teamwork-Demo.svg?branch=develop)](https://travis-ci.com/OluwmayowaF/Teamwork-Demo)
 
 <a href='https://coveralls.io/github/OluwmayowaF/Teamwork-Demo?branch=develop'><img src='https://coveralls.io/repos/github/OluwmayowaF/Teamwork-Demo/badge.svg?branch=develop' alt='Coverage Status' /></a>
 
