@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const pool = new Pool({
-  connectionString: process.env.DB_LOCAL_CONN_URL,
+  connectionString: process.env.DB_TEST_CONN_URL,
 });
 
 pool.on('connect', () => {
@@ -14,7 +14,7 @@ pool.on('connect', () => {
 /**
  * Create users tables
  */
-const createUsersTable = () => {
+const createTestUsersTable = () => {
   const queryText = `CREATE TABLE IF NOT EXISTS
         users(
           id INT GENERATED ALWAYS AS IDENTITY,
@@ -72,7 +72,21 @@ const createGifsTable = () => {
 /**
  * Drop users table
  */
-const dropUsersTable = () => {
+
+const deleteTestUsers = () => {
+  // eslint-disable-next-line quotes
+  const queryText = `DELETE FROM users WHERE jobRole = 'RegTester'`;
+  pool.query(queryText)
+    .then((res) => {
+      // console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      // console.log(err);
+      pool.end();
+    });
+};
+const dropTestUsersTable = () => {
   const queryText = 'DROP TABLE IF EXISTS users';
   pool.query(queryText)
     .then((res) => {
@@ -108,8 +122,9 @@ pool.on('remove', () => {
 });
 
 module.exports = {
-  createUsersTable,
-  dropUsersTable,
+  createTestUsersTable,
+  dropTestUsersTable,
+  deleteTestUsers,
 };
 
 require('make-runnable');
