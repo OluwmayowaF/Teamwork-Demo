@@ -17,7 +17,7 @@ pool.on('connect', () => {
 const createTestUsersTable = () => {
   const queryText = `CREATE TABLE IF NOT EXISTS
         users(
-          id INT GENERATED ALWAYS AS IDENTITY,
+          id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
           firstName VARCHAR(128) NOT NULL,
           lastName VARCHAR(128) NOT NULL,
           email VARCHAR(128) UNIQUE NOT NULL,
@@ -41,7 +41,48 @@ const createTestUsersTable = () => {
       pool.end();
     });
 };
+/**
+ * Create users tables
+ */
+const createArticlesTable = () => {
+  const queryText = `CREATE TABLE IF NOT EXISTS
+        articles(
+          id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+          ownerId INT NOT NULL,
+          title VARCHAR(128) NOT NULL,
+          article VARCHAR(128) NOT NULL,
+          tag VARCHAR(128) DEFAULT 'general',
+          flags INT DEFAULT 0,
+          created_date TIMESTAMP DEFAULT current_timestamp,
+          modified_date TIMESTAMP DEFAULT current_timestamp,
+          FOREIGN KEY (ownerId) REFERENCES users (id) ON DELETE CASCADE
+        )`;
 
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+/**
+ * Drop articles table
+ */
+const dropArticlesTable = () => {
+  const queryText = 'DROP TABLE IF EXISTS articles';
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
 /**
  * Create gifs table
  */
@@ -125,6 +166,8 @@ module.exports = {
   createTestUsersTable,
   dropTestUsersTable,
   deleteTestUsers,
+  createArticlesTable,
+  dropArticlesTable,
 };
 
 require('make-runnable');

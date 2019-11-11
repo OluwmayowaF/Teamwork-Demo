@@ -114,7 +114,7 @@ module.exports = {
     }
   },
 
-  async getAll(req, res) {
+  async getLoggedInUser(req, res) {
     const text = 'SELECT * FROM users WHERE id = $1';
     try {
       const { rows } = await db.query(text, [req.user.id]);
@@ -125,6 +125,24 @@ module.exports = {
     } catch (error) {
       return res.status(400).send(error);
     }
+  },
+
+  async getFeed(req, res) {
+    const getArticles = `SELECT * FROM
+  articles ORDER BY created_date
+   ASC`;
+    const getGifs = `SELECT * FROM 
+   gifs ORDER BY created_date ASC`;
+
+
+    const articles = await db.query(getArticles);
+    const gifs = await db.query(getGifs);
+
+    //const feed = [];
+    //feed.push(articles.rows, gifs.rows);
+    //feed.sort(( articles.rows,  gifs.rows) => new Date(a.created_date) - new Date(b.created_date));
+
+    return res.status(200).send(articles);
   },
 
 };

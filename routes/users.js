@@ -17,5 +17,8 @@ module.exports = (router) => {
     .post(controller.login);
 
   router.route('/user')
-    .get(validateToken, adminRoute, controller.getAll);
+    .get(validateToken, controller.getLoggedInUser);
+
+  router.route('/feed')
+    .get(controller.getFeed);
 };

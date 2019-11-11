@@ -7,11 +7,11 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const app = require('../server');
 const testDb = require('../testdb');
+
 const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTU3MzMwOTY2NiwiZXhwIjoxNTgxOTQ5NjY2LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0MzAwMCJ9.aeQyU4HEGEUyfOvxmLlqru72L0UXNNiPPdykaaktpbo';
 const employeeToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTU3MzMxMDAwMiwiZXhwIjoxNTgxOTUwMDAyLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0MzAwMCJ9.1-7i-OJwWWrcJ7y34slGg18lIiuz2cwvZ6-0VvLifr4';
 const { expect } = chai;
 chai.use(chaiHttp);
-
 
 
 describe('Tests for the Teamwork RestFul API!', () => {
@@ -22,7 +22,7 @@ describe('Tests for the Teamwork RestFul API!', () => {
   describe('Test that the admin can create employes on using the post route - /api/v1/auth/create-user', () => {
 
     // Include Tests for authorization token
-   it('Should not  allow a user without the bearer token to create a user', (done) => {
+    it('Should not  allow a user without the bearer token to create a user', (done) => {
       const user = {
         firstName: 'Test',
         lastName: 'Employee',
@@ -67,7 +67,7 @@ describe('Tests for the Teamwork RestFul API!', () => {
         });
     });
     // Include Tests that its only admin
- it('Allows an admin create an Employee with the right credentials', (done) => {
+    it('Allows an admin create an Employee with the right credentials', (done) => {
       const user = {
         firstName: 'Test',
         lastName: 'Employee',
@@ -123,7 +123,7 @@ describe('Tests for the Teamwork RestFul API!', () => {
         department: '',
         address: 'Lagos',
       };
-      
+
       chai
         .request(app)
         .post('/api/v1/auth/create-user')
@@ -240,5 +240,72 @@ describe('Tests for the Teamwork RestFul API!', () => {
           done();
         });
     });
+  });
+  describe('Test that signed in employees can create articles on the system', () => {
+    it('Should not allow anyone one who is not signed in to create an article', (done) => {
+      const article = {
+        title: 'The Great sails',
+        article: 'The Age of Sail (usually dated as 1571–1862) was a period roughly corresponding to the early modern period in which international trade and naval warfare',
+        tag: 'general',
+      };
+      chai
+        .request(app)
+        .post('/api/v1/articles')
+        .send(article)
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body.error).to.equals('Authentication error. Token required.');
+          done();
+        });
+    });
+    it('Should not allow articles without a title to be submitted', (done) => {
+      const article = {
+        title: '',
+        article: 'The Age of Sail (usually dated as 1571–1862) was a period roughly corresponding to the early modern period in which international trade and naval warfare',
+        tag: 'genral',
+      };
+      chai
+        .request(app)
+        .post('/api/v1/articles')
+        .set('Authorization', `Bearer ${employeeToken}`)
+        .send(article)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.error).to.equals('Your article must have a title and some content');
+          done();
+        });
+    });
+    it('Should not allow articles without content to be submitted', (done) => {
+      const article = {
+        title: 'The Great Sails',
+        article: '',
+      };
+      chai
+        .request(app)
+        .post('/api/v1/articles')
+        .set('Authorization', `Bearer ${employeeToken}`)
+        .send(article)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.error).to.equals('Your article must have a title and some content');
+          done();
+        });
+    });
+   /* it('Should allow a logged in employee to create an article with the rigth data', (done) => {
+      const article = {
+        title: 'The Great Sails',
+        article: 'The Age of Sail (usually dated as 1571–1862) was a period roughly corresponding to the early modern period in which international trade and naval warfare',
+      };
+      chai
+        .request(app)
+        .post('/api/v1/articles')
+        .set('Authorization', `Bearer ${employeeToken}`)
+        .send(article)
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res.body.status).to.equals('success');
+          done();
+        });
+    });*/
   });
 });

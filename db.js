@@ -28,7 +28,8 @@ const createUsersTable = () => {
           address VARCHAR(200) NULL,
           role VARCHAR(11) DEFAULT 'employee',
           created_date TIMESTAMP DEFAULT current_timestamp,
-          modified_date TIMESTAMP DEFAULT current_timestamp
+          modified_date TIMESTAMP DEFAULT current_timestamp,
+    
         )`;
 
   pool.query(queryText)
@@ -42,20 +43,36 @@ const createUsersTable = () => {
     });
 };
 
+const alterUsersTable = () => {
+  const queryText = `ALTER TABLE users 
+  ADD PRIMARY KEY ("id");`;
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+
 /**
- * Create gifs table
+ * Create Articles tables
  */
-/*
-const createGifsTable = () => {
-  const queryText = `CREATE TABLE IF NOT EXISTS gifs (
-          id UUID PRIMARY KEY,
-          userId UUID NOT NULL,
+const createArticlesTable = () => {
+  const queryText = `CREATE TABLE IF NOT EXISTS
+        articles(
+          id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+          ownerId INT NOT NULL,
           title VARCHAR(128) NOT NULL,
-          image VARCHAR(128) NOT NULL,
-          inappropraite INT(255) DEFAULT 0,
-          created_date TIMESTAMP,
-          modified_date TIMESTAMP,
-          FOREIGN KEY (userId) REFERENCES users (id) ON DELETE CASCADE
+          article VARCHAR(128) NOT NULL,
+          tag VARCHAR(128) DEFAULT 'general',
+          flags INT DEFAULT 0,
+          type VARCHAR DEFAULT 'feed',
+          created_date TIMESTAMP DEFAULT current_timestamp,
+          modified_date TIMESTAMP DEFAULT current_timestamp,
+          FOREIGN KEY (ownerId) REFERENCES users (id) ON DELETE CASCADE
         )`;
 
   pool.query(queryText)
@@ -68,10 +85,65 @@ const createGifsTable = () => {
       pool.end();
     });
 };
-*/
 /**
- * Drop users table
+ * Drop articles table
  */
+const dropArticlesTable = () => {
+  const queryText = 'DROP TABLE IF EXISTS articles';
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+/**
+ * Create Articles Comments table
+ */
+const createArticlesCommentsTable = () => {
+  const queryText = `CREATE TABLE IF NOT EXISTS
+        articles_comments(
+          id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+          articleId INT NOT NULL,
+          ownerId INT NOT NULL,
+          comment VARCHAR(128) NOT NULL,
+          flags INT DEFAULT 0,
+          created_date TIMESTAMP DEFAULT current_timestamp,
+          modified_date TIMESTAMP DEFAULT current_timestamp,
+          FOREIGN KEY (articleId) REFERENCES articles (id) ON DELETE CASCADE,
+          FOREIGN KEY (ownerId) REFERENCES users (id) ON DELETE CASCADE
+        )`;
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+
+/**
+ * Drop comments table
+ */
+const dropArticlesCommentsTable = () => {
+  const queryText = 'DROP TABLE IF EXISTS articles_comments';
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+
+
 const dropUsersTable = () => {
   const queryText = 'DROP TABLE IF EXISTS users';
   pool.query(queryText)
@@ -102,6 +174,91 @@ const dropgifsTable = () => {
     });
 };
 */
+
+/**
+ * Create Articles tables
+ */
+const createGifsTable = () => {
+  const queryText = `CREATE TABLE IF NOT EXISTS
+        gifs(
+          id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+          ownerId INT NOT NULL,
+          title VARCHAR(128) NOT NULL,
+          imageUrl VARCHAR(128) NOT NULL,
+          flags INT DEFAULT 0,
+          type VARCHAR DEFAULT 'feed',
+          created_date TIMESTAMP DEFAULT current_timestamp,
+          modified_date TIMESTAMP DEFAULT current_timestamp,
+          FOREIGN KEY (ownerId) REFERENCES users (id) ON DELETE CASCADE
+        )`;
+
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+/**
+ * Drop articles table
+ */
+const dropGifsTable = () => {
+  const queryText = 'DROP TABLE IF EXISTS gifs';
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+/**
+ * Create Articles Comments table
+ */
+const createGifsCommentsTable = () => {
+  const queryText = `CREATE TABLE IF NOT EXISTS
+        gifs_comments(
+          id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+          gifId INT NOT NULL,
+          ownerId INT NOT NULL,
+          comment VARCHAR(128) NOT NULL,
+          flags INT DEFAULT 0,
+          created_date TIMESTAMP DEFAULT current_timestamp,
+          modified_date TIMESTAMP DEFAULT current_timestamp,
+          FOREIGN KEY (gifId) REFERENCES gifs (id) ON DELETE CASCADE,
+          FOREIGN KEY (ownerId) REFERENCES users (id) ON DELETE CASCADE
+        )`;
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+
+/**
+ * Drop comments table
+ */
+const dropGifsCommentsTable = () => {
+  const queryText = 'DROP TABLE IF EXISTS gifs_comments';
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
 pool.on('remove', () => {
   console.log('client removed');
   process.exit(0);
@@ -110,6 +267,15 @@ pool.on('remove', () => {
 module.exports = {
   createUsersTable,
   dropUsersTable,
+  createArticlesTable,
+  dropArticlesTable,
+  alterUsersTable,
+  createArticlesCommentsTable,
+  dropArticlesCommentsTable,
+  createGifsTable,
+  dropGifsTable,
+  createGifsCommentsTable,
+  dropGifsCommentsTable,
 };
 
 require('make-runnable');
