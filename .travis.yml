@@ -5,7 +5,7 @@ services:
 - postgresql
 
 
-script:  node testdb createAllTables;
+script:  node testdb createTestUsersTable;
 after_success:
 - npm run coveralls
 env:
