@@ -6,7 +6,7 @@ services:
 before_script:
 - psql -c 'create database testteamworkdb;' -U postgres
 
-script: npm test
+script: npm run dev
 after_success:
 - npm run coveralls
 env:
