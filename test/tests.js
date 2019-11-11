@@ -8,15 +8,15 @@ const chaiHttp = require('chai-http');
 const app = require('../server');
 const testDb = require('../testdb');
 
-const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTU3MzQzNzgwMiwiZXhwIjoxNTgyMDc3ODAyLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0MzAwMCJ9.cPYVue_PJsk27kgsVbQpCU6BlvwiJzonTayRp-69RpU';
-const employeeToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTU3MzQzNzk5NywiZXhwIjoxNTgyMDc3OTk3LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0MzAwMCJ9.hi90k1_37qA4kADXVrW1OT281WetpoWk-aOETaNKTD0';
+const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTU3MzQ1Njc3MywiZXhwIjoxNTgyMDk2NzczLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0MzAwMCJ9.ibjJKYM05yRqFB3MjGTwvrKE2y3nDcniPQ4aCPGxPCk';
+const employeeToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTU3MzQ1NzIwOSwiZXhwIjoxNTgyMDk3MjA5LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0MzAwMCJ9.9LN_3xp6toYwD2EeaCDG7MsEDBOMuTG7aUNDbw-j5G8';
 const { expect } = chai;
 chai.use(chaiHttp);
 
 
 describe('Tests for the Teamwork RestFul API!', () => {
   after((done) => {
-    testDb.deleteTestUsers();
+    testDb.deleteTestUser();
     done();
   });
   describe('Test that the admin can create employes on using the post route - /api/v1/auth/create-user', () => {
@@ -160,7 +160,7 @@ describe('Tests for the Teamwork RestFul API!', () => {
         });
     });
   });
-/*  describe('Test that employees can sign in with the credentials admin provides to them', () => {
+  describe('Test that employees can sign in with the credentials admin provides to them', () => {
     it('Should not allow an employee sign in without entering thier password ', (done) => {
       const user = {
         email: 'unittest@employee.com',
@@ -291,10 +291,10 @@ describe('Tests for the Teamwork RestFul API!', () => {
           done();
         });
     });
-   /* it('Should allow a logged in employee to create an article with the rigth data', (done) => {
+    it('Should allow a logged in employee to create an article with the rigth data', (done) => {
       const article = {
         title: 'The Great Sails',
-        article: 'The Age of Sail (usually dated as 1571–1862) was a period roughly corresponding to the early modern period in which international trade and naval warfare',
+        article: 'The Age of Sail (usually dated as 1571–1862) was a period roughly corresponding to the early modern perioe',
       };
       chai
         .request(app)
@@ -306,6 +306,6 @@ describe('Tests for the Teamwork RestFul API!', () => {
           expect(res.body.status).to.equals('success');
           done();
         });
-    });*/
+    });
   });
-//});
+});

@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const pool = new Pool({
-  connectionString: process.env.DB_LOCAL_CONN_URL,
+  connectionString: process.env.DB_TEST_CONN_URL,
 });
 
 pool.on('connect', () => {
@@ -14,7 +14,7 @@ pool.on('connect', () => {
 /**
  * Create users tables
  */
-const createTestUsersTable = () => {
+const createUsersTable = () => {
   const queryText = `CREATE TABLE IF NOT EXISTS
         users(
           id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -29,6 +29,7 @@ const createTestUsersTable = () => {
           role VARCHAR(11) DEFAULT 'employee',
           created_date TIMESTAMP DEFAULT current_timestamp,
           modified_date TIMESTAMP DEFAULT current_timestamp
+    
         )`;
 
   pool.query(queryText)
@@ -41,8 +42,38 @@ const createTestUsersTable = () => {
       pool.end();
     });
 };
+
+const alterUsersTable = () => {
+  const queryText = `ALTER TABLE users 
+  ADD PRIMARY KEY ("id");`;
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+
+const deleteTestUser = () => {
+
+  const queryText = `DELETE FROM users 
+ WHERE jobRole = 'RegTester'`;
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+}
+
 /**
- * Create users tables
+ * Create Articles tables
  */
 const createArticlesTable = () => {
   const queryText = `CREATE TABLE IF NOT EXISTS
@@ -84,21 +115,21 @@ const dropArticlesTable = () => {
     });
 };
 /**
- * Create gifs table
+ * Create Articles Comments table
  */
-/*
-const createGifsTable = () => {
-  const queryText = `CREATE TABLE IF NOT EXISTS gifs (
-          id UUID PRIMARY KEY,
-          userId UUID NOT NULL,
-          title VARCHAR(128) NOT NULL,
-          image VARCHAR(128) NOT NULL,
-          inappropraite INT(255) DEFAULT 0,
-          created_date TIMESTAMP,
-          modified_date TIMESTAMP,
-          FOREIGN KEY (userId) REFERENCES users (id) ON DELETE CASCADE
+const createArticlesCommentsTable = () => {
+  const queryText = `CREATE TABLE IF NOT EXISTS
+        articles_comments(
+          id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+          articleId INT NOT NULL,
+          ownerId INT NOT NULL,
+          comment VARCHAR(128) NOT NULL,
+          flags INT DEFAULT 0,
+          created_date TIMESTAMP DEFAULT current_timestamp,
+          modified_date TIMESTAMP DEFAULT current_timestamp,
+          FOREIGN KEY (articleId) REFERENCES articles (id) ON DELETE CASCADE,
+          FOREIGN KEY (ownerId) REFERENCES users (id) ON DELETE CASCADE
         )`;
-
   pool.query(queryText)
     .then((res) => {
       console.log(res);
@@ -109,25 +140,25 @@ const createGifsTable = () => {
       pool.end();
     });
 };
-*/
-/**
- * Drop users table
- */
 
-const deleteTestUsers = () => {
-  // eslint-disable-next-line quotes
-  const queryText = `DELETE FROM users WHERE jobRole = 'RegTester'`;
+/**
+ * Drop comments table
+ */
+const dropArticlesCommentsTable = () => {
+  const queryText = 'DROP TABLE IF EXISTS articles_comments';
   pool.query(queryText)
     .then((res) => {
-      // console.log(res);
+      console.log(res);
       pool.end();
     })
     .catch((err) => {
-      // console.log(err);
+      console.log(err);
       pool.end();
     });
 };
-const dropTestUsersTable = () => {
+
+
+const dropUsersTable = () => {
   const queryText = 'DROP TABLE IF EXISTS users';
   pool.query(queryText)
     .then((res) => {
@@ -141,10 +172,35 @@ const dropTestUsersTable = () => {
 };
 
 /**
- * Drop gifs  table
+ * Create Articles tables
  */
-/*
-const dropgifsTable = () => {
+const createGifsTable = () => {
+  const queryText = `CREATE TABLE IF NOT EXISTS
+        gifs(
+          id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+          ownerId INT NOT NULL,
+          title VARCHAR(128) NOT NULL,
+          imageUrl VARCHAR(128) NOT NULL,
+          flags INT DEFAULT 0,
+          created_date TIMESTAMP DEFAULT current_timestamp,
+          modified_date TIMESTAMP DEFAULT current_timestamp,
+          FOREIGN KEY (ownerId) REFERENCES users (id) ON DELETE CASCADE
+        )`;
+
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+/**
+ * Drop articles table
+ */
+const dropGifsTable = () => {
   const queryText = 'DROP TABLE IF EXISTS gifs';
   pool.query(queryText)
     .then((res) => {
@@ -156,23 +212,90 @@ const dropgifsTable = () => {
       pool.end();
     });
 };
-*/
+/**
+ * Create Articles Comments table
+ */
+const createGifsCommentsTable = () => {
+  const queryText = `CREATE TABLE IF NOT EXISTS
+        gifs_comments(
+          id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+          gifId INT NOT NULL,
+          ownerId INT NOT NULL,
+          comment VARCHAR(128) NOT NULL,
+          flags INT DEFAULT 0,
+          created_date TIMESTAMP DEFAULT current_timestamp,
+          modified_date TIMESTAMP DEFAULT current_timestamp,
+          FOREIGN KEY (gifId) REFERENCES gifs (id) ON DELETE CASCADE,
+          FOREIGN KEY (ownerId) REFERENCES users (id) ON DELETE CASCADE
+        )`;
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
+
+/**
+ * Drop comments table
+ */
+const dropGifsCommentsTable = () => {
+  const queryText = 'DROP TABLE IF EXISTS gifs_comments';
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+};
 pool.on('remove', () => {
   console.log('client removed');
   process.exit(0);
 });
 
-
-
-
-module.exports = {
-  createTestUsersTable,
-  dropTestUsersTable,
-  deleteTestUsers,
-  createArticlesTable,
-  dropArticlesTable,
+/**
+ * Create All Tables
+ */
+const createAllTables = () => {
+  createUsersTable();
+  createArticlesTable();
+  createArticlesCommentsTable();
+  createGifsTable();
+  createGifsCommentsTable();
 };
 
+/**
+ * Drop All Tables
+ */
+const dropAllTables = () => {
+  dropUsersTable();
+  dropArticlesTable();
+  dropArticlesCommentsTable();
+  dropGifsTable();
+  dropGifsCommentsTable();
+};
 
+module.exports = {
+  createUsersTable,
+  dropUsersTable,
+  createArticlesTable,
+  dropArticlesTable,
+  alterUsersTable,
+  createArticlesCommentsTable,
+  dropArticlesCommentsTable,
+  createGifsTable,
+  dropGifsTable,
+  createGifsCommentsTable,
+  dropGifsCommentsTable,
+  createAllTables,
+  dropAllTables,
+  deleteTestUser,
+};
 
 require('make-runnable');
