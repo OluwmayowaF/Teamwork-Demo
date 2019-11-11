@@ -3,10 +3,9 @@ node_js:
 - stable
 services:
 - postgresql
-before_script:
--  node testdb createAcreateAllTables;
 
-script: npm run dev
+
+script:  node testdb createAcreateAllTables;
 after_success:
 - npm run coveralls
 env:
