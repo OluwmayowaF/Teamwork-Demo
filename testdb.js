@@ -58,7 +58,6 @@ const alterUsersTable = () => {
 };
 
 const deleteTestUser = () => {
-
   const queryText = `DELETE FROM users 
  WHERE jobRole = 'RegTester'`;
   pool.query(queryText)
@@ -70,7 +69,7 @@ const deleteTestUser = () => {
       console.log(err);
       pool.end();
     });
-}
+};
 
 /**
  * Create Articles tables

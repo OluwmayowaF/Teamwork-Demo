@@ -154,7 +154,7 @@ module.exports = {
     const findComment = `SELECT * FROM
     articles_comments WHERE articleId= $1`;
 
-   // try {
+    try {
       const { rows } = await db.query(findArticle, [req.params.articleId]);
       if (!rows[0]) {
         return res.status(404).send({ message: 'No Articles from user' });
@@ -170,9 +170,9 @@ module.exports = {
           comments: comments.rows,
         },
       });
- //   } catch (error) {
-  //    return res.status(500).send(error);
-    //}
+    } catch (error) {
+      return res.status(500).send(error);
+    }
   },
 
   async getArticlebyTag(req, res) {
