@@ -28,7 +28,7 @@ const createUsersTable = () => {
           address VARCHAR(200) NULL,
           role VARCHAR(11) DEFAULT 'employee',
           created_date TIMESTAMP DEFAULT current_timestamp,
-          modified_date TIMESTAMP DEFAULT current_timestamp,
+          modified_date TIMESTAMP DEFAULT current_timestamp
     
         )`;
 
