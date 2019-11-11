@@ -162,12 +162,20 @@ pool.on('remove', () => {
   process.exit(0);
 });
 
+const createAllTables = () =>{
+  createTestUsersTable,
+  createArticlesTable,
+};
+
 module.exports = {
   createTestUsersTable,
   dropTestUsersTable,
   deleteTestUsers,
   createArticlesTable,
   dropArticlesTable,
+  createAllTables,
 };
+
+
 
 require('make-runnable');
