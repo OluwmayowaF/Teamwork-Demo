@@ -3,6 +3,9 @@ node_js:
 - stable
 services:
 - postgresql
+before_script:
+- psql -c 'create database testteamworkdb;' -U postgres
+
 script: npm test
 after_success:
 - npm run coveralls
