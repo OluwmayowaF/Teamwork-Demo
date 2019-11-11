@@ -5,8 +5,8 @@
     "main": "server.js",
     "scripts": {
         "test": "mocha",
-        "coverage": "istanbul cover _mocha test/tests.js -x *tests.js ./node_modules/coveralls/bin/coveralls.js",
-
+        "coverage": "istanbul cover _mocha test/tests.js -x *tests.js ./node_modules/coveralls/bin/coveralls.js | coveralls",
+        "coveralls": "./node_modules/coveralls/bin/coveralls.js | coveralls",
         "dev": "cross-env NODE_ENV=development nodemon server.js"
     },
     "repository": {
