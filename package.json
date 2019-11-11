@@ -4,9 +4,8 @@
     "description": "DevC Capstone project demo ",
     "main": "server.js",
     "scripts": {
-        "test": "mocha",
-        "coverage": "istanbul cover _mocha test/tests.js -x *tests.js ./node_modules/coveralls/bin/coveralls.js | coveralls",
-        "coveralls": "./node_modules/coveralls/bin/coveralls.js | coveralls",
+        "test": "mocha --timeout 5000",
+        "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
         "dev": "cross-env NODE_ENV=development nodemon server.js"
     },
     "repository": {
