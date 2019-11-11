@@ -184,7 +184,7 @@ module.exports = {
           status: 'error',
           error: 'Flagged Gif was not found',
         });
-      } const gif = await db.query(deletegif, [req.params.gifId]);
+      }  await db.query(deletegif, [req.params.gifId]);
       return res.status(200).json({
         status: 'success',
         data: {

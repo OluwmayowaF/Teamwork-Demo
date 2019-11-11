@@ -20,7 +20,6 @@ describe('Tests for the Teamwork RestFul API!', () => {
     done();
   });
   describe('Test that the admin can create employes on using the post route - /api/v1/auth/create-user', () => {
-
     // Include Tests for authorization token
     it('Should not  allow a user without the bearer token to create a user', (done) => {
       const user = {

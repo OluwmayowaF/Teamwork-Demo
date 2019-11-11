@@ -36,7 +36,6 @@ module.exports = {
     try {
       const { rows } = await db.query(text, values);
       const beareToken = Helper.generateToken(rows[0].id);
-      console.log(beareToken);
       return res.status(201).json({
         status: 'success',
         data: {
@@ -136,11 +135,12 @@ module.exports = {
 
 
     const articles = await db.query(getArticles);
-    const gifs = await db.query(getGifs);
+    await db.query(getGifs);
 
-    //const feed = [];
-    //feed.push(articles.rows, gifs.rows);
-    //feed.sort(( articles.rows,  gifs.rows) => new Date(a.created_date) - new Date(b.created_date));
+    // const feed = [];
+    // feed.push(articles.rows, gifs.rows);
+    // feed.sort(( articles.rows,  gifs.rows) => new Date(a.created_date) -
+    // new Date(b.created_date));
 
     return res.status(200).send(articles);
   },

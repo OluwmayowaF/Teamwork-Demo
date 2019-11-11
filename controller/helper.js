@@ -53,18 +53,6 @@ const Helper = {
     });
   },
 
-  /* uploadGifs(gifImage) {
-    cloudinary.uploader.upload(gifImage.tempFilePath, { folder: 'TeamworkDemo/', async: true }, (err, image) => {
-      if (!image) {
-        console.log(err);
-        return image.status(500).json({
-          status: 'error',
-          error: 'Something went wrong, abeg check your internet connection and try again',
-        });
-      } cloudinary.waitForAllUploads(gifImage.tempFilePath, err, image);
-      return image;
-    });
-  },*/
 
 };
 
